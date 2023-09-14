@@ -9,20 +9,21 @@ COVER_PROFILE := coverage.txt
 # Disable go sum database lookup for private repos
 GOPRIVATE := github.com/dapperlabs/*
 
-# Ensure go bin path is in path (Especially for CI)
+# Set OS-related environment variables
 ifeq ($(OS),Windows_NT)
 	GOPATH ?= $(USERPROFILE)\go
 	PATH := $(PATH);$(GOPATH)\bin
+	MKDIR := mkdir /l
+	SET_GOPATH := go env -w GOPATH="$(GOPATH)"
+	SET_GO111MODULE := go env -w GO111MODULE=on
+	SET_CGO_DISABLED := go env -w CGO_ENABLED=0
 else
 	GOPATH ?= $(HOME)/go
 	PATH := $(PATH):$(GOPATH)/bin
-endif
-
-# Set MKDIR variable based on OS
-ifeq ($(OS),Windows_NT)
-	MKDIR := mkdir
-else
 	MKDIR := mkdir -p
+	SET_GOPATH := export GOPATH="$(GOPATH)"
+	SET_GO111MODULE := export GO111MODULE=on
+	SET_CGO_DISABLED := export CGO_ENABLED=0
 endif
 
 MIXPANEL_PROJECT_TOKEN := 3fae49de272be1ceb8cf34119f747073
@@ -35,17 +36,17 @@ binary: $(BINARY)
 
 .PHONY: install-tools
 install-tools:
-	$(MKDIR) ${GOPATH} && \
-	go env -w GO111MODULE=on && \
+	$(MKDIR) "$(GOPATH)" && \
+	$(SET_GOPATH) && \
 	go install github.com/axw/gocov/gocov@latest && \
-	go install github.com/matm/gocov-html@latest && \
+	go install github.com/matm/gocov-html/cmd/gocov-html@latest && \
 	go install github.com/sanderhahn/gozip/cmd/gozip@latest && \
 	go install github.com/vektra/mockery/v2@latest
 
 .PHONY: test
 test:
-	go env -w GO111MODULE=on && \
-	go env -w CGO_ENABLED=0 && \
+	$(SET_GO111MODULE) && \
+	$(SET_CGO_DISABLED) && \
 	go test -coverprofile=$(COVER_PROFILE) $(if $(JSON_OUTPUT),-json,) ./... && \
 	cd flowkit && \
 	go test -coverprofile=$(COVER_PROFILE) $(if $(JSON_OUTPUT),-json,) ./...
