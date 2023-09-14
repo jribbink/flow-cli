@@ -1,3 +1,22 @@
+# Set OS-related environment variables
+ifeq ($(OS),Windows_NT)
+	SHELL := cmd.exe
+	GOPATH ?= $(USERPROFILE)\go
+	PATH := $(PATH);$(GOPATH)\bin
+	MKDIR_GOPATH := if not exist "$(GOPATH)" md "$(GOPATH)"
+	SET_GOPATH := go env -w GOPATH="$(GOPATH)"
+	SET_GO111MODULE := go env -w GO111MODULE=on
+	SET_CGO_DISABLED := go env -w CGO_ENABLED=0
+else
+	SHELL := /bin/bash
+	GOPATH ?= $(HOME)/go
+	PATH := $(PATH):$(GOPATH)/bin
+	MKDIR_GOPATH := mkdir -p "$(GOPATH)"
+	SET_GOPATH := export GOPATH="$(GOPATH)"
+	SET_GO111MODULE := export GO111MODULE=on
+	SET_CGO_DISABLED := export CGO_ENABLED=0
+endif
+
 # The short Git commit hash
 SHORT_COMMIT := $(shell git rev-parse --short HEAD)
 # The Git commit hash
@@ -8,23 +27,6 @@ VERSION := $(shell git describe --tags --abbrev=0 --exact-match 2>/dev/null)
 COVER_PROFILE := coverage.txt
 # Disable go sum database lookup for private repos
 GOPRIVATE := github.com/dapperlabs/*
-
-# Set OS-related environment variables
-ifeq ($(OS),Windows_NT)
-	GOPATH ?= $(USERPROFILE)\go
-	PATH := $(PATH);$(GOPATH)\bin
-	MKDIR_GOPATH := if not exist "$(GOPATH)" md "$(GOPATH)"
-	SET_GOPATH := go env -w GOPATH="$(GOPATH)"
-	SET_GO111MODULE := go env -w GO111MODULE=on
-	SET_CGO_DISABLED := go env -w CGO_ENABLED=0
-else
-	GOPATH ?= $(HOME)/go
-	PATH := $(PATH):$(GOPATH)/bin
-	MKDIR_GOPATH := mkdir -p "$(GOPATH)"
-	SET_GOPATH := export GOPATH="$(GOPATH)"
-	SET_GO111MODULE := export GO111MODULE=on
-	SET_CGO_DISABLED := export CGO_ENABLED=0
-endif
 
 MIXPANEL_PROJECT_TOKEN := 3fae49de272be1ceb8cf34119f747073
 ACCOUNT_TOKEN := lilico:sF60s3wughJBmNh2
