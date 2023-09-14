@@ -36,7 +36,7 @@ binary: $(BINARY)
 
 .PHONY: install-tools
 install-tools:
-	$(MKDIR) && \
+	$(MKDIR_GOPATH) && \
 	$(SET_GOPATH) && \
 	go install github.com/axw/gocov/gocov@latest && \
 	go install github.com/matm/gocov-html/cmd/gocov-html@latest && \
