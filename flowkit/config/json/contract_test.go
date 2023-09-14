@@ -128,7 +128,7 @@ func Test_ConfigContractsAliases(t *testing.T) {
 	nft, _ := contracts.ByName("NonFungibleToken")
 	assert.NotNil(t, nft)
 	assert.False(t, nft.IsAliased())
-	assert.Equal(t, nft.Location, "../hungry-kitties/cadence/contracts/NonFungibleToken.cdc")
+	assert.Equal(t, nft.Location, filepath.FromSlash("../hungry-kitties/cadence/contracts/NonFungibleToken.cdc"))
 }
 
 func Test_TransformContractToJSON(t *testing.T) {

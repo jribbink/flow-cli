@@ -400,12 +400,11 @@ func Test_GetContractsByNameComplex(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 7, len(contracts))
 
-	//sort contracts so tests are deterministic
+	//sort contracts by name so tests are deterministic
 	sort.Slice(contracts, func(i, j int) bool {
 		return contracts[i].Name < contracts[j].Name
 	})
 
-	//sort names so tests are deterministic
 	contractNames := funk.Map(contracts, func(c *project.Contract) string {
 		return c.Name
 	}).([]string)
