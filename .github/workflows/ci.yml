@@ -30,7 +30,7 @@ jobs:
       - name: Run tests
         run: make ci && make check-tidy && make check-headers && make check-schema
       - name: Display Exit Code
-        run: echo "Exit Code: $?"
+        run: echo $?
       - name: Upload coverage report
         uses: codecov/codecov-action@v1
         with:
