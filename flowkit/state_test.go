@@ -400,21 +400,23 @@ func Test_GetContractsByNameComplex(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 7, len(contracts))
 
+	//sort contracts so tests are deterministic
+	sort.Slice(contracts, func(i, j int) bool {
+		return contracts[i].Name < contracts[j].Name
+	})
+
 	//sort names so tests are deterministic
 	contractNames := funk.Map(contracts, func(c *project.Contract) string {
 		return c.Name
 	}).([]string)
-	sort.Strings(contractNames)
 
 	sources := funk.Map(contracts, func(c *project.Contract) string {
 		return c.Location()
 	}).([]string)
-	sort.Strings(sources)
 
 	targets := funk.Map(contracts, func(c *project.Contract) string {
 		return c.AccountAddress.String()
 	}).([]string)
-	sort.Strings(targets)
 
 	assert.Equal(t, contractNames[0], "FungibleToken")
 	assert.Equal(t, contractNames[1], "Kibble")
@@ -425,20 +427,20 @@ func Test_GetContractsByNameComplex(t *testing.T) {
 	assert.Equal(t, contractNames[6], "NonFungibleToken")
 
 	assert.Equal(t, sources[0], filepath.FromSlash("../hungry-kitties/cadence/contracts/FungibleToken.cdc"))
-	assert.Equal(t, sources[1], filepath.FromSlash("../hungry-kitties/cadence/contracts/NonFungibleToken.cdc"))
-	assert.Equal(t, sources[2], filepath.FromSlash("cadence/kibble/contracts/Kibble.cdc"))
+	assert.Equal(t, sources[1], filepath.FromSlash("cadence/kibble/contracts/Kibble.cdc"))
+	assert.Equal(t, sources[2], filepath.FromSlash("cadence/kittyItems/contracts/KittyItems.cdc"))
 	assert.Equal(t, sources[3], filepath.FromSlash("cadence/kittyItems/contracts/KittyItems.cdc"))
-	assert.Equal(t, sources[4], filepath.FromSlash("cadence/kittyItems/contracts/KittyItems.cdc"))
+	assert.Equal(t, sources[4], filepath.FromSlash("cadence/kittyItemsMarket/contracts/KittyItemsMarket.cdc"))
 	assert.Equal(t, sources[5], filepath.FromSlash("cadence/kittyItemsMarket/contracts/KittyItemsMarket.cdc"))
-	assert.Equal(t, sources[6], filepath.FromSlash("cadence/kittyItemsMarket/contracts/KittyItemsMarket.cdc"))
+	assert.Equal(t, sources[6], filepath.FromSlash("../hungry-kitties/cadence/contracts/NonFungibleToken.cdc"))
 
 	assert.Equal(t, targets[0], "f8d6e0586b0a20c1")
 	assert.Equal(t, targets[1], "f8d6e0586b0a20c1")
-	assert.Equal(t, targets[2], "f8d6e0586b0a20c1")
+	assert.Equal(t, targets[2], "f8d6e0586b0a20c7")
 	assert.Equal(t, targets[3], "f8d6e0586b0a20c1")
-	assert.Equal(t, targets[4], "f8d6e0586b0a20c1")
-	assert.Equal(t, targets[5], "f8d6e0586b0a20c7")
-	assert.Equal(t, targets[6], "f8d6e0586b0a20c7")
+	assert.Equal(t, targets[4], "f8d6e0586b0a20c7")
+	assert.Equal(t, targets[5], "f8d6e0586b0a20c1")
+	assert.Equal(t, targets[6], "f8d6e0586b0a20c1")
 }
 
 func Test_EmulatorConfigComplex(t *testing.T) {
