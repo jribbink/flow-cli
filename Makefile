@@ -2,6 +2,7 @@
 ifeq ($(OS),Windows_NT)
 	SHELL := cmd.exe
 	GOPATH ?= $(USERPROFILE)\go
+	GOBIN := $(GOPATH)\bin
 	PATH := $(PATH);$(GOPATH)\bin
 	MKDIR_GOPATH := if not exist "$(GOPATH)" md "$(GOPATH)"
 	SET_GO111MODULE := go env -w GO111MODULE=on
@@ -9,6 +10,7 @@ ifeq ($(OS),Windows_NT)
 else
 	SHELL := /bin/bash
 	GOPATH ?= $(HOME)/go
+	GOBIN := $(GOPATH)/bin
 	PATH := $(PATH):$(GOPATH)/bin
 	MKDIR_GOPATH := mkdir -p "$(GOPATH)"
 	SET_GO111MODULE := export GO111MODULE=on
