@@ -129,5 +129,6 @@ generate-schema:
 
 .PHONY: generate
 generate: install-tools
+	echo %PATH% && dir $(GOPATH) && \
 	cd flowkit && \
  	go generate ./...
