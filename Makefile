@@ -125,7 +125,7 @@ check-tidy:
 
 .PHONY: generate-schema
 generate-schema:
-	cd flowkit && go run ./cmd/flow-schema/flow-schema.go ./schema.json
+	echo %PATH% && dir $(GOPATH) && cd flowkit && go run ./cmd/flow-schema/flow-schema.go ./schema.json
 
 .PHONY: generate
 generate: install-tools
